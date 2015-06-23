@@ -432,6 +432,9 @@ static int add_automount(
         if (r < 0)
                 return log_error_errno(r, "Failed to write unit file %s: %m", p);
 
+        if (streq(id, "boot"))
+                return 0;
+
         lnk = strjoin(arg_dest, "/" SPECIAL_LOCAL_FS_TARGET ".wants/", unit, NULL);
         if (!lnk)
                 return log_oom();
