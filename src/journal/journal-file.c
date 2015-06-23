@@ -39,7 +39,7 @@
 #define DEFAULT_DATA_HASH_TABLE_SIZE (2047ULL*sizeof(HashItem))
 #define DEFAULT_FIELD_HASH_TABLE_SIZE (333ULL*sizeof(HashItem))
 
-#define COMPRESSION_SIZE_THRESHOLD (512ULL)
+#define COMPRESSION_SIZE_THRESHOLD (8192ULL)
 
 /* This is the minimum journal file size */
 #define JOURNAL_FILE_SIZE_MIN (4ULL*1024ULL*1024ULL)           /* 4 MiB */
