@@ -392,6 +392,7 @@ static int dispatch_dev_kmsg(sd_event_source *es, int fd, uint32_t revents, void
 
 int server_open_dev_kmsg(Server *s) {
         int r;
+        char buffer[40960];
 
         assert(s);
 
@@ -400,6 +401,15 @@ int server_open_dev_kmsg(Server *s) {
                 log_full(errno == ENOENT ? LOG_DEBUG : LOG_WARNING,
                          "Failed to open /dev/kmsg, ignoring: %m");
                 return 0;
+        }
+
+
+        /* clear out /dev/kmsg, we don't want all its messages */
+        while (1) {
+                 int ret;
+                 ret = read(s->dev_kmsg_fd, buffer, 40960);
+                 if (ret <= 0)
+                         break;
         }
 
         r = sd_event_add_io(s->event, &s->dev_kmsg_event_source, s->dev_kmsg_fd, EPOLLIN, dispatch_dev_kmsg, s);
