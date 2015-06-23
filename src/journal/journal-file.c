@@ -137,7 +137,7 @@ int journal_file_set_offline(JournalFile *f) {
 JournalFile* journal_file_close(JournalFile *f) {
         assert(f);
 
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
         /* Write the final tag */
         if (f->seal && f->writable)
                 journal_file_append_tag(f);
@@ -172,7 +172,7 @@ JournalFile* journal_file_close(JournalFile *f) {
         free(f->compress_buffer);
 #endif
 
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
         if (f->fss_file)
                 munmap(f->fss_file, PAGE_ALIGN(f->fss_file_size));
         else
@@ -1023,7 +1023,7 @@ static int journal_file_append_field(
         if (r < 0)
                 return r;
 
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
         r = journal_file_hmac_put_object(f, OBJECT_FIELD, o, p);
         if (r < 0)
                 return r;
@@ -1123,7 +1123,7 @@ static int journal_file_append_data(
                 fo->field.head_data_offset = le64toh(p);
         }
 
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
         r = journal_file_hmac_put_object(f, OBJECT_DATA, o, p);
         if (r < 0)
                 return r;
@@ -1213,7 +1213,7 @@ static int link_entry_into_array(JournalFile *f,
         if (r < 0)
                 return r;
 
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
         r = journal_file_hmac_put_object(f, OBJECT_ENTRY_ARRAY, o, q);
         if (r < 0)
                 return r;
@@ -1361,7 +1361,7 @@ static int journal_file_append_entry_internal(
         o->entry.xor_hash = htole64(xor_hash);
         o->entry.boot_id = f->header->boot_id;
 
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
         r = journal_file_hmac_put_object(f, OBJECT_ENTRY, o, np);
         if (r < 0)
                 return r;
@@ -1423,7 +1423,7 @@ int journal_file_append_entry(JournalFile *f, const dual_timestamp *ts, const st
             ts->monotonic < le64toh(f->header->tail_entry_monotonic))
                 return -EINVAL;
 
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
         r = journal_file_maybe_append_tag(f, ts->realtime);
         if (r < 0)
                 return r;
@@ -2624,7 +2624,7 @@ int journal_file_open(
 #elif defined(HAVE_XZ)
         f->compress_xz = compress;
 #endif
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
         f->seal = seal;
 #endif
 
@@ -2676,7 +2676,7 @@ int journal_file_open(
 
                 fd_setcrtime(f->fd, 0);
 
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
                 /* Try to load the FSPRG state, and if we can't, then
                  * just don't do sealing */
                 if (f->seal) {
@@ -2714,7 +2714,7 @@ int journal_file_open(
                         goto fail;
         }
 
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
         if (!newly_created && f->writable) {
                 r = journal_file_fss_load(f);
                 if (r < 0)
@@ -2734,7 +2734,7 @@ int journal_file_open(
                         goto fail;
         }
 
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
         r = journal_file_hmac_setup(f);
         if (r < 0)
                 goto fail;
@@ -2749,7 +2749,7 @@ int journal_file_open(
                 if (r < 0)
                         goto fail;
 
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
                 r = journal_file_append_first_tag(f);
                 if (r < 0)
                         goto fail;

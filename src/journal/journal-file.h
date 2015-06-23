@@ -23,7 +23,7 @@
 
 #include <inttypes.h>
 
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
 #include <gcrypt.h>
 #endif
 
@@ -108,7 +108,7 @@ typedef struct JournalFile {
         size_t compress_buffer_size;
 #endif
 
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
         gcry_md_hd_t hmac;
         bool hmac_running;
 

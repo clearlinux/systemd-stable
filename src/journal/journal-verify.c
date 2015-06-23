@@ -819,13 +819,13 @@ int journal_file_verify(
         int data_fd = -1, entry_fd = -1, entry_array_fd = -1;
         unsigned i;
         bool found_last = false;
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
         uint64_t last_tag = 0;
 #endif
         assert(f);
 
         if (key) {
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
                 r = journal_file_parse_verification_key(f, key);
                 if (r < 0) {
                         log_error("Failed to parse seed.");
@@ -1064,7 +1064,7 @@ int journal_file_verify(
                                 goto fail;
                         }
 
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
                         if (f->seal) {
                                 uint64_t q, rt;
 

@@ -91,7 +91,7 @@ static const char *arg_directory = NULL;
 static char **arg_file = NULL;
 static int arg_priorities = 0xFF;
 static const char *arg_verify_key = NULL;
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
 static usec_t arg_interval = DEFAULT_FSS_INTERVAL_USEC;
 static bool arg_force = false;
 #endif
@@ -224,7 +224,7 @@ static void help(void) {
                "  -D --directory=PATH      Show journal files from directory\n"
                "     --file=PATH           Show journal file\n"
                "     --root=ROOT           Operate on catalog files underneath the root ROOT\n"
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
                "     --interval=TIME       Time interval for changing the FSS sealing key\n"
                "     --verify-key=KEY      Specify FSS verification key\n"
                "     --force               Override of the FSS key pair with --setup-keys\n"
@@ -244,7 +244,7 @@ static void help(void) {
                "     --list-catalog        Show all message IDs in the catalog\n"
                "     --dump-catalog        Show entries in the message catalog\n"
                "     --update-catalog      Update the message catalog database\n"
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
                "     --setup-keys          Generate a new FSS key pair\n"
                "     --verify              Verify journal file consistency\n"
 #endif
@@ -562,7 +562,7 @@ static int parse_argv(int argc, char *argv[]) {
                         arg_action = ACTION_VACUUM;
                         break;
 
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
                 case ARG_FORCE:
                         arg_force = true;
                         break;
@@ -1384,7 +1384,7 @@ static int add_syslog_identifier(sd_journal *j) {
 }
 
 static int setup_keys(void) {
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
         size_t mpk_size, seed_size, state_size, i;
         uint8_t *mpk, *seed, *state;
         int fd = -1, r;
@@ -1587,7 +1587,7 @@ static int verify(sd_journal *j) {
                 int k;
                 usec_t first = 0, validated = 0, last = 0;
 
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
                 if (!arg_verify_key && JOURNAL_HEADER_SEALED(f->header))
                         log_notice("Journal file %s has sealing enabled but verification key has not been passed using --verify-key=.", f->path);
 #endif

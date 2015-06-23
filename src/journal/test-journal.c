@@ -60,7 +60,7 @@ static void test_non_empty(void) {
         iovec.iov_len = strlen(test);
         assert_se(journal_file_append_entry(f, &ts, &iovec, 1, NULL, NULL, NULL) == 0);
 
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
         journal_file_append_tag(f);
 #endif
         journal_file_dump(f);

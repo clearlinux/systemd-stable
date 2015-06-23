@@ -1612,7 +1612,7 @@ int server_init(Server *s) {
 }
 
 void server_maybe_append_tags(Server *s) {
-#ifdef HAVE_GCRYPT
+#ifdef HAVE_JOURNALD_AUTHENTICATE
         JournalFile *f;
         Iterator i;
         usec_t n;
