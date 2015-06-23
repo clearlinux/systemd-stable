@@ -81,6 +81,11 @@ int locale_setup(char ***environment) {
                         log_warning_errno(r, "Failed to read /etc/locale.conf: %m");
         }
 
+        /* Nothing set... use some UTF-8 locale */
+        if (r <= 0) {
+                variables[VARIABLE_LANG] = strdup("en_US.UTF-8");
+        }
+
         add = NULL;
         for (i = 0; i < _VARIABLE_LC_MAX; i++) {
                 char *s;
