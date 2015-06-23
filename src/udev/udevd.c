@@ -369,6 +369,8 @@ static void worker_spawn(Manager *manager, struct event *event) {
 
                 manager->event = sd_event_unref(manager->event);
 
+                log_debug("seql %llu: mark 1", udev_device_get_seqnum(dev));
+
                 sigfillset(&mask);
                 fd_signal = signalfd(-1, &mask, SFD_NONBLOCK|SFD_CLOEXEC);
                 if (fd_signal < 0) {
@@ -441,6 +443,10 @@ static void worker_spawn(Manager *manager, struct event *event) {
                                 }
                         }
 
+
+                        log_debug("seql %llu: mark 2", udev_device_get_seqnum(dev));
+
+
                         /* needed for renaming netifs */
                         udev_event->rtnl = rtnl;
 
@@ -450,28 +456,39 @@ static void worker_spawn(Manager *manager, struct event *event) {
                                                  &manager->properties,
                                                  manager->rules);
 
+                        log_debug("seql %llu: mark 3", udev_device_get_seqnum(dev));
+
                         udev_event_execute_run(udev_event,
                                                arg_event_timeout_usec, arg_event_timeout_warn_usec);
+
+                        log_debug("seql %llu: mark 4", udev_device_get_seqnum(dev));
 
                         if (udev_event->rtnl)
                                 /* in case rtnl was initialized */
                                 rtnl = sd_netlink_ref(udev_event->rtnl);
 
+                        log_debug("seql %llu: mark 5", udev_device_get_seqnum(dev));
+
                         /* apply/restore inotify watch */
                         if (udev_event->inotify_watch) {
                                 udev_watch_begin(udev, dev);
+                                log_debug("seql %llu: mark 6", udev_device_get_seqnum(dev));
                                 udev_device_update_db(dev);
+                                log_debug("seql %llu: mark 7", udev_device_get_seqnum(dev));
                         }
 
+                        log_debug("seql %llu: mark 8", udev_device_get_seqnum(dev));
                         safe_close(fd_lock);
 
                         /* send processed event back to libudev listeners */
                         udev_monitor_send_device(worker_monitor, NULL, dev);
+                        log_debug("seql %llu: mark 9", udev_device_get_seqnum(dev));
 
 skip:
                         log_debug("seq %llu processed", udev_device_get_seqnum(dev));
 
                         /* send udevd the result of the event execution */
+                        log_debug("seql %llu: mark 10", udev_device_get_seqnum(dev));
                         r = worker_send_message(manager->worker_watch[WRITE_END]);
                         if (r < 0)
                                 log_error_errno(r, "failed to send result of seq %llu to main daemon: %m",
