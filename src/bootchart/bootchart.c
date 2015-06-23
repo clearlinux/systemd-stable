@@ -33,6 +33,7 @@
 
  ***/
 
+#include <sys/mount.h>
 #include <sys/resource.h>
 #include <stdio.h>
 #include <signal.h>
@@ -372,6 +373,8 @@ int main(int argc, char *argv[]) {
                 log_start = gettime_ns();
                 graph_start = log_start - uptime;
         }
+
+        mount("/proc", "/proc", "proc", 0, NULL);
 
         if (graph_start < 0.0) {
                 log_error("Failed to setup graph start time.\n\n"
