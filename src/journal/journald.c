@@ -55,8 +55,6 @@ int main(int argc, char *argv[]) {
                 goto finish;
 
         server_vacuum(&server, false, false);
-        server_flush_to_var(&server);
-        server_flush_dev_kmsg(&server);
 
         log_debug("systemd-journald running as pid "PID_FMT, getpid());
         server_driver_message(&server, SD_MESSAGE_JOURNAL_START, "Journal started");
@@ -64,6 +62,9 @@ int main(int argc, char *argv[]) {
         sd_notify(false,
                   "READY=1\n"
                   "STATUS=Processing requests...");
+
+        server_flush_to_var(&server);
+        server_flush_dev_kmsg(&server);
 
         for (;;) {
                 usec_t t = USEC_INFINITY, n;
