@@ -486,8 +486,6 @@ int main(int argc, char *argv[]) {
                 return EXIT_FAILURE;
         }
 
-        log_info("systemd-bootchart wrote %s\n", output_file);
-
         r = do_journal_append(output_file);
         if (r < 0)
                 return EXIT_FAILURE;

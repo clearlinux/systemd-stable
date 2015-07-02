@@ -173,8 +173,6 @@ static int svg_title(FILE *of, const char *build, int pscount, double log_start,
                 snprintf(filename, sizeof(filename), "/sys/block/%s/device/model", rootbdev);
 
                 r = read_one_line_file(filename, &model);
-                if (r < 0)
-                        log_info("Error reading disk model for %s: %m\n", rootbdev);
         }
 
         /* various utsname parameters */
