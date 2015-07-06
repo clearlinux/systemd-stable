@@ -506,11 +506,6 @@ dist_systemunit_DATA = \
 	units/x-.slice \
 	units/systemd-initctl.socket \
 	units/syslog.socket \
-	units/dev-hugepages.mount \
-	units/dev-mqueue.mount \
-	units/sys-kernel-config.mount \
-	units/sys-kernel-debug.mount \
-	units/sys-fs-fuse-connections.mount \
 	units/tmp.mount \
 	units/var-lib-machines.mount \
 	units/printer.target \
@@ -5948,11 +5943,6 @@ MULTI_USER_TARGET_WANTS += \
 	systemd-ask-password-wall.path
 
 SYSINIT_TARGET_WANTS += \
-	dev-hugepages.mount \
-	dev-mqueue.mount \
-	sys-kernel-config.mount \
-	sys-kernel-debug.mount \
-	sys-fs-fuse-connections.mount \
 	systemd-sysctl.service \
 	systemd-ask-password-console.path
 

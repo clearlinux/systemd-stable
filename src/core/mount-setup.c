@@ -109,6 +109,16 @@ static const MountPoint mount_table[] = {
 #endif
         { "kdbusfs",    "/sys/fs/kdbus",             "kdbusfs",    NULL, MS_NOSUID|MS_NOEXEC|MS_NODEV,
           is_kdbus_wanted,       MNT_IN_CONTAINER },
+        { "hugetlbfs",   "/dev/hugepages",           "hugetlbfs",   NULL,                      MS_NOSUID|MS_NOEXEC|MS_NODEV,
+          NULL,          MNT_NONE                   },
+        { "mqueue",      "/dev/mqueue",              "mqueue",      NULL,                      MS_NOSUID|MS_NOEXEC|MS_NODEV,
+          NULL,          MNT_NONE                   },
+        { "fusectl",     "/sys/fs/fuse/connections", "fusectl",     NULL,                      MS_NOSUID|MS_NOEXEC|MS_NODEV,
+          NULL,          MNT_NONE                   },
+        { "configfs",    "/sys/kernel/config",       "configfs",    NULL,                      MS_NOSUID|MS_NOEXEC|MS_NODEV,
+          NULL,          MNT_NONE                   },
+        { "debugfs",    "/sys/kernel/debug",         "debugfs",     NULL,                      MS_NOSUID|MS_NOEXEC|MS_NODEV,
+          NULL,          MNT_NONE                   },
 };
 
 /* These are API file systems that might be mounted by other software,
