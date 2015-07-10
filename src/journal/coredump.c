@@ -787,6 +787,10 @@ int main(int argc, char* argv[]) {
                 /* skip whole core dumping part */
                 goto log;
 
+        static const char* const dirs[] = {SYSTEM_COREDUMP_PATH, NULL};
+        char *arguments[] = {NULL, "-p", comm, "-E", exe, "-c", filename};
+        execute_directories(dirs, DEFAULT_TIMEOUT_USEC, arguments);
+
         /* If we don't want to keep the coredump on disk, remove it
          * now, as later on we will lack the privileges for
          * it. However, we keep the fd to it, so that we can still
