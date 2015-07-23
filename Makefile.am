@@ -385,7 +385,8 @@ bin_PROGRAMS = \
 	systemd-path
 
 dist_bin_SCRIPTS = \
-	src/kernel-install/kernel-install
+	src/kernel-install/kernel-install \
+	src/kernel-install/kernel-efi-stub
 
 dist_kernelinstall_SCRIPTS = \
 	src/kernel-install/50-depmod.install \
