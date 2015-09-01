@@ -1085,6 +1085,8 @@ static VOID config_entry_add_from_file(Config *config, EFI_HANDLE *device, CHAR1
 
                 if (strcmpa((CHAR8 *)"options", key) == 0) {
                         CHAR16 *new;
+                        CHAR16 uuid[37];
+                        CHAR16 *clr_cmdline;
 
                         new = stra_to_str(value);
                         if (entry->options) {
@@ -1097,6 +1099,13 @@ static VOID config_entry_add_from_file(Config *config, EFI_HANDLE *device, CHAR1
                                 entry->options = new;
                                 new = NULL;
                         }
+
+                        if (disk_get_part_uuid(device, uuid) == EFI_SUCCESS){
+                                clr_cmdline = PoolPrint(L"%s deviceloader=%s", entry->options,  uuid);
+                                FreePool(entry->options);
+                                entry->options = clr_cmdline;
+                        }
+
                         FreePool(new);
                         continue;
                 }
@@ -1580,6 +1589,8 @@ static VOID config_entry_add_linux( Config *config, EFI_LOADED_IMAGE *loaded_ima
                                 CHAR16 *conf;
                                 CHAR16 *path;
                                 CHAR16 *cmdline;
+                                CHAR16 uuid[37];
+                                CHAR16 *clr_cmdline;
 
                                 conf = PoolPrint(L"%s-%s", os_id, os_version ? : os_build);
                                 path = PoolPrint(L"\\EFI\\Linux\\%s", f->FileName);
@@ -1590,7 +1601,11 @@ static VOID config_entry_add_linux( Config *config, EFI_LOADED_IMAGE *loaded_ima
                                 len = file_read(linux_dir, f->FileName, offs[1], szs[1] - 1 , &content);
                                 if (len > 0) {
                                         cmdline = stra_to_str(content);
-                                        entry->options = cmdline;
+
+                                        if (disk_get_part_uuid(loaded_image->DeviceHandle, uuid) == EFI_SUCCESS){
+                                                clr_cmdline = PoolPrint(L"%s deviceloader=%s", cmdline,  uuid);
+                                        }
+                                        entry->options = clr_cmdline;
                                         cmdline = NULL;
                                 }
                                 FreePool(cmdline);
